@@ -3,8 +3,14 @@
 
 var ball; // this is the breakout ball
 var wallTop, wallBottom, wallLeft, wallRight; // these are walls
+var bricks; // THIS IS GROUP OF BRICKS
 
 var MAX_SPEED = 9; // how fast can we go?
+var BRICK_W = 40; // this is how wide a brick is
+var BRICK_H = 20; // this is how tall a brick is
+var SPACEBETWEENBRICKS = 4; // how much space between each brick
+var ROWS = 9; // rows of bricks
+var COLUMNS = 16; // columns of bricks
 
 function setup() {
   createCanvas(800, 600);
@@ -23,6 +29,24 @@ function setup() {
   ball = createSprite(width/2, height-200, 11, 11);
   ball.maxSpeed = MAX_SPEED;
   ball.shapeColor = 255;
+  
+  // make the bricks
+  bricks = new Group(); // group of bricks
+  var xoffset = 20+(width-(BRICK_W+SPACEBETWEENBRICKS)*COLUMNS) / 2;
+  var yoffset = 50;
+  
+  for(var i = 0;i<COLUMNS;i++)
+  {
+    for(var j = 0;j<ROWS;j++)
+    {
+      var xpos = xoffset+(BRICK_W+SPACEBETWEENBRICKS)*i;
+      var ypos = yoffset+(BRICK_H+SPACEBETWEENBRICKS)*j;
+      
+      var onebrick = createSprite(xpos, ypos, BRICK_W, BRICK_H);
+      onebrick.immovable = true;
+      bricks.add(onebrick);
+    }
+  }
 
 }
 
@@ -34,6 +58,8 @@ function draw() {
   ball.bounce(wallBottom);
   ball.bounce(wallLeft);
   ball.bounce(wallRight);
+  // one more bounce:
+  ball.bounce(bricks, brickHit);
   
   // MAGIC FUNCTION FOR p5.play:
   drawSprites(); // THIS WILL DRAW EVERYTHING
@@ -49,6 +75,12 @@ function mousePressed()
 
 function keyPressed()
 {
+}
+
+function brickHit(hitter, hitee)
+{
+  hitter.shapeColor = hitee.shapeColor;
+  hitee.remove(); // kill the brick we just hit
 }
 
 function print()
