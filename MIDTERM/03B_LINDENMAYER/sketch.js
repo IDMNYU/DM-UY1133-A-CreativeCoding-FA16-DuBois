@@ -100,7 +100,7 @@ function drawIt(k)
     // polar to cartesian transformation based on step and currentangle:
     var x1 = x + step*cos(radians(currentangle));
     var y1 = y + step*sin(radians(currentangle));
-    rect(x1, y1, 50, 50); // connect the old and the new
+    line(x, y, x1, y1); // connect the old and the new
     // update the turtle's position:
     x = x1;
     y = y1;
