@@ -27,7 +27,6 @@ function init() {
 	camera.lookAt( 0, 0, 0 );
 
 
-
   // set up the scene graph:
 	scene = new THREE.Scene();
 
@@ -56,6 +55,7 @@ function init() {
 
   // this binds the texture to a material:
 	var material = new THREE.MeshLambertMaterial( { map: thetexture, side: THREE.DoubleSide } );
+	//var material = new THREE.MeshLambertMaterial(  );
 
 	// ADD ALL THE 3D DATA AS OBJECTS TO THE SCENE:
 
@@ -75,7 +75,7 @@ function init() {
 	object.position.set( 200, 0, 200 );
 	scene.add( object );
 
-	//
+// 	//
 
 	object = new THREE.Mesh( new THREE.PlaneGeometry( 100, 100, 4, 4 ), material );
 	object.position.set( -400, 0, 0 );
@@ -97,7 +97,7 @@ function init() {
 	// add it to the rendering stack:
 	scene.add( object );
 
-	object = new THREE.Mesh( new THREE.RingGeometry( 10, 50, 20, 5, 0, Math.PI * 2 ), material );
+	object = new THREE.Mesh( new THREE.RingGeometry( 25, 50, 20, 5, 0, Math.PI * 2 ), material );
 	object.position.set( 200, 0, 0 );
 	scene.add( object );
 
@@ -176,12 +176,13 @@ function render() {
 
 	camera.lookAt( scene.position );
 
-	for ( var i = 0, l = scene.children.length; i < l; i ++ ) {
+	for ( var i = 0; i < scene.children.length; i ++ ) {
 
 		var object = scene.children[ i ];
 
 		object.rotation.x = timer * 5;
 		object.rotation.y = timer * 2.5;
+		object.rotation.z = timer * -1.3;
 
 	}
 
