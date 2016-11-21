@@ -37,7 +37,7 @@ function init() {
   // ambient light goes EVERYWHERE.  the result is 
   // to multiply every color in the scene with the ambient
   // light color:
-  light = new THREE.AmbientLight( 0xfffff );
+  light = new THREE.AmbientLight( 0xffffff );
 	scene.add( light );
 
   // direction light shines on one spot:
