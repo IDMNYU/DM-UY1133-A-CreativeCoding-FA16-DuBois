@@ -3,7 +3,11 @@ var container; // this represents the canvas
 var renderer; // this represent the world / renderer
 var camera; // this is a viewport
 var scene; // this is a list of things to render
-var object;
+var object, light; // an object and a light
+
+// THIS THING IS IN CHARGE OF THE SHADERS:
+var composer; 
+var effect; // this is the shader we're adding
 
 var showmesh = false;
 var geometry_size = 4;
@@ -13,14 +17,16 @@ animate(); // start animating (equivish to draw())
 
 function init() {
   setupCamera(); // get the camera happening
-  makeScene(); // lights, textures, materials, objects
   setupRenderer(); // the main renderer
+  makeScene(); // lights, textures, materials, objects
   addToWebPage(renderer); // add the WebGL to the web page
 
 	window.addEventListener( 'resize', onWindowResize, false );
-	// two new fun callback functions:
   document.addEventListener( 'mousedown', onDocumentMouseDown, false );
   document.addEventListener('keypress', onDocumentKeyPressed, false); 
+  document.addEventListener('mousemove', onDocumentMouseMove, false); 
+
+
 }
 
 // THE ANIMATE FUNCTION GETS THE RENDERER MOVING:
@@ -42,7 +48,9 @@ function render() {
   object.rotation.x += 0.005;
 	object.rotation.y += 0.01;
 
-	renderer.render( scene, camera );
+	//renderer.render( scene, camera );
+	
+	composer.render();
 	
 }
 
@@ -64,6 +72,8 @@ function setupRenderer()
 function makeScene()
 {
   // set up the scene graph:
+	scene = new THREE.Scene();
+
   scene = new THREE.Scene();
 	scene.fog = new THREE.Fog( 0x000000, 1, 1000 );
 	
@@ -89,6 +99,18 @@ function makeScene()
 	light = new THREE.DirectionalLight( 0xffffff );
 	light.position.set( 1, 1, 1 );
 	scene.add( light );
+
+  // postprocessing
+
+	composer = new THREE.EffectComposer( renderer );
+	composer.addPass( new THREE.RenderPass( scene, camera ) );
+
+ 	effect = new THREE.ShaderPass( LukeShader );
+ 	effect.uniforms[ 'foo' ].value = 1;
+ 	effect.renderToScreen = true;
+ 	composer.addPass( effect );
+
+	//
 
 
 }
@@ -138,3 +160,10 @@ function onDocumentKeyPressed(event)
   }
   
 }
+
+function onDocumentMouseMove( event ) {
+  var mx = event.x / window.innerWidth;
+  var my = event.y / window.innerHeight;
+ 	effect.uniforms[ 'foo' ].value = 1.0-my;
+}
+

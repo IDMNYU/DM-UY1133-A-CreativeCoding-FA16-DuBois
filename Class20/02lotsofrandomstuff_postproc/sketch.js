@@ -102,8 +102,13 @@ function makeScene()
 	composer = new THREE.EffectComposer( renderer );
 	composer.addPass( new THREE.RenderPass( scene, camera ) );
 
+  // the things you change:
+  // what shader am i loading? :
 	var effect = new THREE.ShaderPass( THREE.DotScreenShader );
-	effect.uniforms[ 'scale' ].value = 1;
+	// any variables for the shader? :
+	effect.uniforms[ 'scale' ].value = 0.5;
+	
+	// the things you leave along:
 	effect.renderToScreen = true;
 	composer.addPass( effect );
 
