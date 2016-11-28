@@ -44,6 +44,7 @@ LukeShader = {
 			// figure out B&W average:
 			"float average = ( color.r + color.g + color.b ) / 3.0;",
 			// invert:
+			//"gl_FragColor = vec4(1.0-color.r*foo, 1.0-color.g*foo, 1.0-color.b*foo, 1.0-color.a*foo);",
 			"gl_FragColor = vec4( vec3( (1.0-average)*foo ), color.a );",
 		"}"
 

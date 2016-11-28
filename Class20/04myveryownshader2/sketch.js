@@ -94,9 +94,9 @@ function makeScene()
 
 	}
 
-	scene.add( new THREE.AmbientLight( 0xdddddd) );
+	scene.add( new THREE.AmbientLight( 0xff0000 ) );
 
-	light = new THREE.DirectionalLight( 0xff0000 );
+	light = new THREE.DirectionalLight( 0xffffff );
 	light.position.set( 1, 1, 1 );
 	scene.add( light );
 
@@ -106,7 +106,7 @@ function makeScene()
 	composer.addPass( new THREE.RenderPass( scene, camera ) );
 
  	effect = new THREE.ShaderPass( LukeShader );
- 	effect.uniforms[ 'foo' ].value = 1;
+ 	effect.uniforms[ 'scale' ].value = 5.;
  	effect.renderToScreen = true;
  	composer.addPass( effect );
 
@@ -164,6 +164,6 @@ function onDocumentKeyPressed(event)
 function onDocumentMouseMove( event ) {
   var mx = event.x / window.innerWidth;
   var my = event.y / window.innerHeight;
- 	effect.uniforms[ 'foo' ].value = 1.0-my;
+ 	effect.uniforms[ 'scale' ].value = (1.0-my)*.1;
 }
 
