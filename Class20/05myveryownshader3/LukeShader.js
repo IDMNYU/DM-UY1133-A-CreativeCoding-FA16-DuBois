@@ -5,7 +5,8 @@ LukeShader = {
 	uniforms: {
 
 		"tDiffuse": { type: "t", value: null },
-		"scale":    { type: "f", value: 1.0 }
+		"scale":    { type: "f", value: 1.0 },
+		"thresh":    { type: "f", value: 1.0 }
 
 
 	},
@@ -29,6 +30,7 @@ LukeShader = {
 	// this is what to do with the VIDEO (fragment) data:
 	fragmentShader: [
 		"uniform float scale;",
+		"uniform float thresh;",
 
 		// THESE ARE HARD-WIRED WORDS:
 		//
@@ -65,11 +67,23 @@ LukeShader = {
 			"vec4 col6 = texture2D(tDiffuse, tc6);",
 			"vec4 col7 = texture2D(tDiffuse, tc7);",
 			"vec4 col8 = texture2D(tDiffuse, tc8);",
-			// make a sum and average:
-			"vec4 sum = (1.0 * col0 + 2.0 * col1 + 1.0 * col2 +  2.0 * col3 + 4.0 * col4 + 2.0 * col5 + 1.0 * col6 + 2.0 * col7 + 1.0 * col8) / 16.0;", 
-			//"vec4 sum = (1.0 * col0 + 1.0 * col1 + 1.0 * col2 +  1.0 * col3 + 1.0 * col4 + 1.0 * col5 + 1.0 * col6 + 1.0 * col7 + 1.0 * col8) / 9.0;", 
+
+
+			// convolution kernel 1: add 'em up
+			"vec4 sum1 = (-1.0 * col0 + 0.0 * col1 + 1.0 * col2 + -2.0 * col3 + 0.0 * col4 + 2.0 * col5 + -1.0 * col6 + 0.0 * col7 + 1.0 * col8);", 
+			// convolution kernel 2: add 'em up
+			"vec4 sum2 = (1.0 * col0 + 2.0 * col1 + 1.0 * col2 + 0.0 * col3 + 0.0 * col4 + 0.0 * col5 + -1.0 * col6 + -2.0 * col7 + -1.0 * col8);",
+			// figure out distance:
+			"vec4 sum = sqrt(sum1*sum1 + sum2*sum2);",
+			// make a threshold vec4:
+			"vec4 threshvec = vec4(thresh);", 
+			// binary operation:
+			"bvec4 onoroff = greaterThan(sum,threshvec);", 
+			// multiply sum and binary:
+			"vec4 therealoutput = sum*float(onoroff);", 
   			// MOST IMPORTANT LINE IN THE WHOLE THING:          
-  			"gl_FragColor = vec4(sum.rgb, 1.0);",
+  			//"gl_FragColor = vec4(therealoutput);",
+  			"gl_FragColor = therealoutput;",
 		"}"
 
 	].join( "\n" )
